@@ -21,7 +21,13 @@
 ## Install
 
 Download the latest disk image from the [releases page](https://github.com/hossainalhaidari/caliper/releases)
-— macOS 14 or later — or build it yourself:
+— macOS 14 or later — or install it with Homebrew:
+
+```bash
+brew install --cask hossainalhaidari/tap/caliper
+```
+
+or build it yourself:
 
 ```bash
 make app     # build, bundle and launch build/Caliper.app

@@ -16,7 +16,8 @@ gh workflow run release.yml -f version=0.2.0
 
 It tests, builds with the version from the tag and the commit count as the build number, signs with
 the Developer ID, notarises and staples the disk image, writes a signed `appcast.xml`, and publishes
-both on a GitHub release.
+both on a GitHub release. Then it moves the cask in `homebrew-tap` to the new version and the published
+disk image's checksum; if only that part fails, *Re-run failed jobs* retries it alone.
 
 Installed copies read `releases/latest/download/appcast.xml`, which GitHub redirects to the appcast
 on the newest release. Publishing the release *is* publishing the update.
@@ -47,6 +48,19 @@ rename `[Unreleased]` to the version and date it.
    | `NOTARY_API_KEY_ID` | That key's ID |
    | `NOTARY_API_ISSUER_ID` | The issuer ID shown above the list of keys |
    | `SPARKLE_PRIVATE_KEY` | The update key, exported as `make update-key` shows at the end |
+4. **The tap's deploy key.** A key pair that can push to `homebrew-tap` and nothing else:
+
+   ```bash
+   ssh-keygen -t ed25519 -N '' -C 'caliper release' -f tap-key
+   gh repo deploy-key add tap-key.pub --repo hossainalhaidari/homebrew-tap --allow-write --title 'caliper release'
+   gh api -X PUT repos/hossainalhaidari/caliper/environments/homebrew-tap
+   gh secret set HOMEBREW_TAP_DEPLOY_KEY --env homebrew-tap < tap-key
+   rm tap-key tap-key.pub
+   ```
+
+   Then give the new `homebrew-tap` environment the same *Deployment branches and tags* as
+   `release` — `main` and `v*`. It is an environment of its own so that required reviewers on
+   `release` do not make every release wait for a second approval.
 
 Secrets stay private when the repository is public: GitHub never shows one again once it is set, and
 workflows run for pull requests from forks get none at all.

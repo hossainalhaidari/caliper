@@ -41,5 +41,7 @@ rm -rf ~/Library/Application\ Support/de.alhaidari.caliper ~/Library/Caches/de.a
 defaults delete de.alhaidari.caliper
 ```
 
+Installed with Homebrew, `brew uninstall --zap --cask caliper` quits Caliper and removes the app and everything above in one step.
+
 If notifications were ever allowed, Caliper stays listed under *System Settings ▸ Notifications* until
 macOS tidies it away; nothing is sent from there once the app is gone.

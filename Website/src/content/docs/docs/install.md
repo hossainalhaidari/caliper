@@ -11,6 +11,19 @@ Take the disk image from the [releases page](https://github.com/hossainalhaidari
 open it, and drag **Caliper** into *Applications*. Releases are signed with a Developer ID and
 notarised by Apple, so they open like any other downloaded app.
 
+## With Homebrew
+
+```bash
+brew install --cask hossainalhaidari/tap/caliper
+```
+
+That taps [hossainalhaidari/homebrew-tap](https://github.com/hossainalhaidari/homebrew-tap), trusts
+the Caliper cask in it — naming it in full is what Homebrew takes as your say-so — and installs the
+same signed, notarised disk image as the releases page. The copy keeps itself up to date as any other
+does ([Updates and login](../updates/)), so `brew upgrade` leaves it alone; `brew upgrade --greedy`
+moves it on anyway. `brew uninstall --zap --cask caliper` removes your widgets and settings along with
+it — everything listed in [Files and uninstalling](../files/).
+
 ## First launch
 
 Caliper has **no Dock icon and no window of its own**. It starts with one widget, *Overview*, in the
