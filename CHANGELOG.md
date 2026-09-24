@@ -13,6 +13,8 @@ the versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-09-24
+
 The first release.
 
 ### Added
@@ -45,3 +47,6 @@ The first release.
   or the screen is locked -- and, one item at a time, while a full-screen app
   hides the menu bar of a single-display Mac, the notch hides an item, or
   windows cover a desktop widget. Alerts keep watching throughout.
+
+[Unreleased]: https://github.com/hossainalhaidari/caliper/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/hossainalhaidari/caliper/releases/tag/v0.1.0
