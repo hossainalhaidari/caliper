@@ -103,9 +103,15 @@ final class StandInWindow {
     var window: NSWindow? { isShowing ? nil : hidden }
 
     /// Shows or hides it, and has `watcher` look.
+    ///
+    /// The answer comes from `isShowing`, not from AppKit: a window that was
+    /// never ordered in reads as hidden on a Mac with a display, but a CI
+    /// runner reports it visible for a while. What is under test is the
+    /// watcher's decision and what it switches off, not the window server.
     func set(showing: Bool, for watcher: OcclusionWatcher) {
         isShowing = showing
         watcher.window = { [unowned self] in self.window }
+        watcher.isOnScreen = { [unowned self] _ in self.isShowing }
         watcher.evaluate()
     }
 }

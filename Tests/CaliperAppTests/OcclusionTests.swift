@@ -55,9 +55,14 @@ struct OcclusionTests {
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 40, height: 20),
                               styleMask: .borderless, backing: .buffered, defer: true)
 
+        // Re-read while waiting rather than once: this is the one test of the
+        // real window server, and on a CI runner a new window reads as visible
+        // for a while with no notification when that changes.
         let watcher = OcclusionWatcher(grace: .milliseconds(20), window: { window })
-        watcher.evaluate()
-        #expect(await eventually { !watcher.isVisible })
+        #expect(await eventually {
+            watcher.evaluate()
+            return !watcher.isVisible
+        })
 
         // Several menu bars: a hidden window is not a hidden item.
         let mirrored = OcclusionWatcher(grace: .milliseconds(20), window: { window }, canBeHidden: { false })

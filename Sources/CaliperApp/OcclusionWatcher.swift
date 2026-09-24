@@ -39,6 +39,11 @@ final class OcclusionWatcher {
     /// real one on every notification is the point, and would undo any answer
     /// a test tried to impose.
     var window: () -> NSWindow?
+    /// How a window is asked whether any of it is on screen. Replaceable for
+    /// the same reason: what AppKit reports for a window a test made but never
+    /// showed depends on the machine -- a CI runner with no display calls a new
+    /// window visible for a while, and sends no notification when it stops.
+    var isOnScreen: (NSWindow) -> Bool = { $0.occlusionState.contains(.visible) }
     private let canBeHidden: () -> Bool
     private let grace: Duration
     private var pendingHide: Task<Void, Never>?
@@ -75,7 +80,7 @@ final class OcclusionWatcher {
     /// Reads the window's state now. Called on every notification, and once by
     /// the owner after its window has first been shown.
     func evaluate() {
-        let hidden = canBeHidden() && window().map { !$0.occlusionState.contains(.visible) } == true
+        let hidden = canBeHidden() && window().map { !isOnScreen($0) } == true
         report(visible: !hidden)
     }
 
