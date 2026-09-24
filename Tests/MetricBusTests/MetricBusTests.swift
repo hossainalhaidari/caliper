@@ -12,6 +12,7 @@ final class SpySource: MetricSource, @unchecked Sendable {
     private var _samples = 0
     private var _lastElapsed: TimeInterval = -1
     private var _firstElapsed: TimeInterval?
+    private var _intervals: [TimeInterval] = []
 
     var activations: Int { lock.withLock { _activations } }
     var deactivations: Int { lock.withLock { _deactivations } }
@@ -19,6 +20,8 @@ final class SpySource: MetricSource, @unchecked Sendable {
     var lastElapsed: TimeInterval { lock.withLock { _lastElapsed } }
     /// The interval handed to the very first sample, kept however many follow.
     var firstElapsed: TimeInterval? { lock.withLock { _firstElapsed } }
+    /// Every measured interval, in order -- the zero of the first sample left out.
+    var intervals: [TimeInterval] { lock.withLock { _intervals } }
 
     let cadence: Cadence
 
@@ -44,8 +47,20 @@ final class SpySource: MetricSource, @unchecked Sendable {
             _samples += 1
             _lastElapsed = context.elapsed
             if _firstElapsed == nil { _firstElapsed = context.elapsed }
+            if context.elapsed > 0 { _intervals.append(context.elapsed) }
         }
         sink.emit("spy.value", 42)
+    }
+}
+
+/// Polls until `condition` holds or five seconds pass. The bus runs on its own
+/// queue with deliberate leeway, and a loaded CI runner can stall it for
+/// seconds, so "wait about N ticks" is either flaky or slow; "wait until it has
+/// happened" is neither.
+func waitUntil(_ condition: () -> Bool) async throws {
+    let deadline = ContinuousClock.now + .seconds(5)
+    while !condition(), ContinuousClock.now < deadline {
+        try await Task.sleep(for: .milliseconds(10))
     }
 }
 
@@ -132,7 +147,7 @@ struct MetricBusTests {
         let subscription = bus.subscribe(to: "spy.value")
 
         bus.start()
-        try await Task.sleep(for: .milliseconds(250))
+        try await waitUntil { spy.samples > 0 }
         bus.stop()
 
         let afterStop = spy.samples
@@ -156,7 +171,7 @@ struct MetricBusTests {
         let subscription = bus.subscribe(to: "spy.value")
 
         bus.start()
-        try await Task.sleep(for: .milliseconds(250))
+        try await waitUntil { spy.samples >= 3 }
         bus.stop()
 
         let history = bus.history(for: "spy.value", count: 16)
@@ -252,14 +267,17 @@ struct MetricBusTimingTests {
         let subscription = bus.subscribe(to: "spy.value")
 
         bus.start()
-        try await Task.sleep(for: .milliseconds(400))
+        try await waitUntil { spy.intervals.count >= 4 }
         bus.stop()
         subscription.cancel()
 
-        // Timer leeway means ticks drift by design, so this must be close to the
-        // configured interval without being exactly it.
-        #expect(spy.lastElapsed > 0.02)
-        #expect(spy.lastElapsed < 0.20)
+        // Timer leeway means ticks drift by design, so an interval must be close
+        // to the configured one without being exactly it. The shortest is the
+        // one asked about: a stalled runner stretches some ticks, and a measured
+        // interval longer than nominal is the bus being right about that.
+        let shortest = try #require(spy.intervals.min(), "the bus never measured an interval")
+        #expect(shortest > 0.02)
+        #expect(shortest < 0.20)
     }
 
     @Test("a metric that stops reporting is dropped from snapshots")
@@ -272,7 +290,17 @@ struct MetricBusTimingTests {
         bus.observe { collector.record($0) }
 
         bus.start()
-        try await Task.sleep(for: .milliseconds(600))
+        // Waits for the metric to come and go rather than sleeping for "about
+        // twelve ticks": staleness is counted in ticks, and on a loaded CI
+        // runner 600ms of wall clock held too few of them for three emissions
+        // and three silent intervals.
+        let deadline = ContinuousClock.now + .seconds(5)
+        while ContinuousClock.now < deadline {
+            let snapshots = collector.all
+            let seen = snapshots.contains { $0.values["transient.value"] != nil }
+            if seen, snapshots.last?.values["transient.value"] == nil { break }
+            try await Task.sleep(for: .milliseconds(20))
+        }
         bus.stop()
         subscription.cancel()
 
