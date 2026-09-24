@@ -1,0 +1,1223 @@
+/* Landing page. Tokens come from theme.css, which is imported first. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 2px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.022em;
+  font-weight: 640;
+}
+
+p {
+  margin: 0;
+}
+
+code,
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.wrap {
+  width: min(100% - 2.5rem, var(--measure));
+  margin-inline: auto;
+}
+
+.skip {
+  position: absolute;
+  inset-inline-start: -9999px;
+}
+
+.skip:focus {
+  inset-inline-start: 1rem;
+  inset-block-start: 1rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ---------------------------------------------------------------- header -- */
+
+.masthead {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 50;
+  border-block-end: 1px solid transparent;
+  background: color-mix(in srgb, var(--ground) 82%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  transition: border-color 200ms ease;
+}
+
+.masthead[data-stuck='true'] {
+  border-block-end-color: var(--hairline);
+}
+
+.masthead__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  block-size: 4rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--ink);
+  font-weight: 640;
+  font-size: 1.0625rem;
+  letter-spacing: -0.014em;
+  text-decoration: none;
+}
+
+.brand img {
+  inline-size: 28px;
+  block-size: 28px;
+}
+
+.masthead nav {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-inline-start: auto;
+}
+
+.masthead nav a {
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.masthead nav a:hover {
+  color: var(--ink);
+  background: var(--ground-sunk);
+}
+
+.masthead nav a.is-cta {
+  margin-inline-start: 0.35rem;
+  padding-inline: 0.95rem;
+  background: var(--solid);
+  color: var(--solid-ink);
+  font-weight: 560;
+}
+
+.masthead nav a.is-cta:hover {
+  filter: brightness(1.15);
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+  padding: 0;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+  background: var(--ground-sunk);
+}
+
+/* The button shows the theme it would switch you to: a moon while the page is
+   light, a sun while it is dark. Both the system preference and an explicit
+   choice have to be honoured, so each state is written twice. */
+.theme-toggle .sun {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .theme-toggle .sun {
+    display: block;
+  }
+
+  :root:not([data-theme='light']) .theme-toggle .moon {
+    display: none;
+  }
+}
+
+:root[data-theme='dark'] .theme-toggle .sun {
+  display: block;
+}
+
+:root[data-theme='dark'] .theme-toggle .moon {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ hero -- */
+
+.hero {
+  position: relative;
+  padding-block: clamp(3.5rem, 8vw, 6rem) 0;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset-block-start: -35%;
+  inset-inline: -10%;
+  block-size: 70%;
+  background: radial-gradient(
+    ellipse 50% 60% at 50% 50%,
+    color-mix(in srgb, var(--slate-500) 18%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative;
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block-end: 1.25rem;
+  padding: 0.3rem 0.8rem 0.3rem 0.4rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.eyebrow b {
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--amber-500) 22%, transparent);
+  color: var(--ink);
+  font-weight: 620;
+}
+
+h1 {
+  font-size: clamp(2.35rem, 6.2vw, 4rem);
+  letter-spacing: -0.033em;
+}
+
+/* The headline's second line is the icon's reading: slate running into the
+   amber tip, the one warm thing on the page. */
+h1 .grad {
+  background: linear-gradient(100deg, var(--slate-700) 20%, var(--amber-700) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) h1 .grad {
+    background: linear-gradient(100deg, #d6dae2 20%, var(--amber-500) 95%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+:root[data-theme='dark'] h1 .grad {
+  background: linear-gradient(100deg, #d6dae2 20%, var(--amber-500) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.lede {
+  margin-block: 1.25rem 0;
+  color: var(--ink-soft);
+  font-size: clamp(1.0625rem, 2.1vw, 1.1875rem);
+  line-height: 1.65;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-block-start: 2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.35rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 0.9688rem;
+  font-weight: 560;
+  text-decoration: none;
+  transition: transform 120ms ease, background 150ms ease, border-color 150ms ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--solid);
+  color: var(--solid-ink);
+  box-shadow: var(--shadow-card);
+}
+
+.btn--primary:hover {
+  filter: brightness(1.15);
+}
+
+.btn--ghost {
+  border-color: var(--hairline);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.btn--ghost:hover {
+  border-color: var(--ink-faint);
+  background: var(--ground-sunk);
+}
+
+.hero__note {
+  margin-block-start: 1.15rem;
+  color: var(--ink-faint);
+  font-size: 0.875rem;
+}
+
+/* ------------------------------------------------------------------ mock -- */
+
+.mock {
+  margin-block-start: clamp(2.5rem, 6vw, 4rem);
+
+  /* The drawn menu bar follows the page's theme, as the real one follows the
+     system's. */
+  --mb-bg: rgb(246 246 248 / 0.62);
+  --mb-ink: #16181d;
+  --panel-bg: rgb(246 246 248 / 0.8);
+  --panel-ink: #16181d;
+  --panel-soft: #5b6170;
+  --wall: linear-gradient(160deg, #b7c3d6, #7d8ca6 48%, #4b5670);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .mock {
+    --mb-bg: rgb(28 30 36 / 0.6);
+    --mb-ink: #f2f3f5;
+    --panel-bg: rgb(36 38 45 / 0.82);
+    --panel-ink: #f2f3f5;
+    --panel-soft: #a9aebb;
+    --wall: linear-gradient(160deg, #3b4459, #232a3a 50%, #12151d);
+  }
+}
+
+:root[data-theme='dark'] .mock {
+  --mb-bg: rgb(28 30 36 / 0.6);
+  --mb-ink: #f2f3f5;
+  --panel-bg: rgb(36 38 45 / 0.82);
+  --panel-ink: #f2f3f5;
+  --panel-soft: #a9aebb;
+  --wall: linear-gradient(160deg, #3b4459, #232a3a 50%, #12151d);
+}
+
+.mock__frame {
+  position: relative;
+  max-inline-size: 62rem;
+  margin-inline: auto;
+  padding: 8px;
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lift);
+}
+
+.mock__screen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: 13px;
+  overflow: hidden;
+  background: var(--wall);
+  container-type: inline-size;
+  font-size: 10px;
+}
+
+/* -------------------------------------------------------------- menu bar -- */
+
+.menubar {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 1.5cqw;
+  block-size: 3.6cqw;
+  padding-inline: 1.6cqw;
+  background: var(--mb-bg);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  color: var(--mb-ink);
+  font-size: 1.45cqw;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.menubar b {
+  font-weight: 650;
+}
+
+.menubar__apple {
+  inline-size: 1.3cqw;
+  block-size: 1.6cqw;
+}
+
+.menubar__grow {
+  flex: 1;
+}
+
+.menubar__glyph {
+  inline-size: 1.9cqw;
+  block-size: 1.4cqw;
+}
+
+.menubar__battery {
+  inline-size: 2.5cqw;
+}
+
+.menubar__clock {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ----------------------------------------------------------------- strip -- */
+
+/* One status item, drawn as one image in the app. Every cell reserves its
+   widest value and digits are tabular, so a changing number never moves its
+   neighbours -- the same rule the app enforces with a test. */
+.strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9cqw;
+  block-size: 100%;
+  padding-inline: 0.5cqw;
+  font-variant-numeric: tabular-nums;
+}
+
+.cell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  block-size: 2.2cqw;
+  transition: color 250ms ease;
+}
+
+.cell__label {
+  margin-inline-end: 0.45em;
+  font-size: 0.85em;
+  opacity: 0.55;
+}
+
+.cell__num {
+  display: inline-block;
+  min-inline-size: 2ch;
+  text-align: end;
+}
+
+.cell__unit {
+  margin-inline-start: 0.1em;
+}
+
+.cell--graph svg {
+  inline-size: 4.8cqw;
+  block-size: 2.1cqw;
+}
+
+.graph__area {
+  fill: currentColor;
+  opacity: 0.4;
+}
+
+.graph__line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+
+.cell--donut svg {
+  inline-size: 2.2cqw;
+  block-size: 2.2cqw;
+  transform: rotate(-90deg);
+}
+
+.donut__track,
+.donut__value {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.2;
+}
+
+.donut__track {
+  opacity: 0.25;
+}
+
+.donut__value {
+  transition: stroke-dasharray 400ms ease;
+}
+
+/* Two rates, half height each, sharing one width reservation. */
+.cell--rates {
+  display: inline-grid;
+  grid-template-columns: auto 3.2ch 3.6ch;
+  column-gap: 0.25em;
+  align-items: center;
+  font-size: 0.72em;
+  line-height: 1.05;
+}
+
+.cell--rates .cell__num {
+  min-inline-size: 0;
+}
+
+.cell--rates .cell__unit {
+  margin: 0;
+}
+
+/* Alerts: the colour, and a line under the cell so colour is never alone --
+   dashed past the warning threshold, solid past the critical one. */
+.cell[data-alerting]::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -0.35cqw;
+  border-block-end: 0.18cqw solid transparent;
+}
+
+.mock[data-state='warning'] .cell[data-alerting] {
+  color: var(--warn);
+}
+
+.mock[data-state='warning'] .cell[data-alerting]::after {
+  border-block-end-style: dashed;
+  border-block-end-color: currentColor;
+}
+
+.mock[data-state='critical'] .cell[data-alerting] {
+  color: var(--crit);
+}
+
+.mock[data-state='critical'] .cell[data-alerting]::after {
+  border-block-end-color: currentColor;
+}
+
+/* ---------------------------------------------------------------- window -- */
+
+.window {
+  position: absolute;
+  inset-block-start: 9cqw;
+  inset-inline-start: 6cqw;
+  inline-size: 46cqw;
+  border-radius: 1cqw;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  box-shadow: 0 2cqw 5cqw -1.5cqw rgb(0 0 0 / 0.5);
+}
+
+.window__bar {
+  display: flex;
+  gap: 0.55cqw;
+  align-items: center;
+  block-size: 2.6cqw;
+  padding-inline: 1cqw;
+  border-block-end: 1px solid var(--hairline-soft);
+  background: var(--ground-sunk);
+}
+
+.window__light {
+  inline-size: 0.85cqw;
+  block-size: 0.85cqw;
+  border-radius: 50%;
+}
+
+.window__light--r {
+  background: #ff5f57;
+}
+.window__light--y {
+  background: #febc2e;
+}
+.window__light--g {
+  background: #28c840;
+}
+
+.window__body {
+  display: grid;
+  align-content: start;
+  gap: 1.1cqw;
+  min-block-size: 36cqw;
+  padding: 2cqw;
+}
+
+.window__body i {
+  inline-size: var(--w);
+  block-size: 0.9cqw;
+  border-radius: 999px;
+  background: var(--hairline);
+}
+
+/* ----------------------------------------------------------------- panel -- */
+
+.panel {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 4.4cqw;
+  inset-inline-end: 21cqw;
+  inline-size: 24cqw;
+  padding: 1.5cqw;
+  border-radius: 1.3cqw;
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  box-shadow: 0 1.5cqw 4cqw -1cqw rgb(0 0 0 / 0.45), inset 0 0 0 1px rgb(255 255 255 / 0.12);
+  color: var(--panel-ink);
+  font-size: 1.25cqw;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-weight: 650;
+}
+
+.panel__head b {
+  font-size: 2.1cqw;
+  font-weight: 600;
+}
+
+.panel__spark {
+  display: block;
+  inline-size: 100%;
+  block-size: 5cqw;
+  margin-block: 0.9cqw 1cqw;
+}
+
+.panel__rows {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 0.55cqw;
+  margin: 0;
+}
+
+.panel__rows dt {
+  color: var(--panel-soft);
+}
+
+.panel__rows dd {
+  margin: 0;
+  text-align: end;
+}
+
+.panel__chips {
+  display: flex;
+  gap: 0.5cqw;
+  margin-block-start: 1.2cqw;
+  padding-block-start: 1cqw;
+  border-block-start: 1px solid color-mix(in srgb, var(--panel-ink) 14%, transparent);
+}
+
+.panel__chips span {
+  padding: 0.3cqw 0.7cqw;
+  border-radius: 999px;
+  color: var(--panel-soft);
+  font-size: 1.05cqw;
+}
+
+.panel__chips .is-on {
+  background: color-mix(in srgb, var(--panel-ink) 12%, transparent);
+  color: var(--panel-ink);
+}
+
+/* ------------------------------------------------------ desktop widget -- */
+
+/* The same composer at a larger height, so it reads across a room. */
+.desk {
+  position: absolute;
+  inset-block-end: 4cqw;
+  inset-inline-end: 4cqw;
+  padding: 0.8cqw 1.4cqw;
+  border-radius: 1.2cqw;
+  background: rgb(10 12 16 / 0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 2.6cqw;
+}
+
+.strip--desk {
+  gap: 1.6cqw;
+  padding: 0;
+}
+
+.strip--desk .cell {
+  block-size: 3.8cqw;
+}
+
+.strip--desk .cell--graph svg {
+  inline-size: 8.4cqw;
+  block-size: 3.6cqw;
+}
+
+.strip--desk .cell--donut svg {
+  inline-size: 3.6cqw;
+  block-size: 3.6cqw;
+}
+
+.strip--desk .cell[data-alerting]::after {
+  inset-block-end: -0.5cqw;
+  border-block-end-width: 0.28cqw;
+}
+
+/* --------------------------------------------------------------- switch -- */
+
+.mock__switch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-start: 1.5rem;
+  text-align: center;
+}
+
+.mock__switch-label {
+  color: var(--ink-faint);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mock__switch-group {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--ground-sunk);
+}
+
+.mock__switch-group button {
+  padding: 0.4rem 1rem;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 540;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.mock__switch-group button:hover {
+  color: var(--ink);
+}
+
+.mock__switch-group button[aria-pressed='true'] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-card);
+}
+
+.mock__caption {
+  max-inline-size: 34rem;
+  min-block-size: 3rem;
+  color: var(--ink-faint);
+  font-size: 0.9375rem;
+}
+
+/* -------------------------------------------------------------- sections -- */
+
+section {
+  padding-block: clamp(3.5rem, 8vw, 6rem);
+}
+
+section.sunk {
+  background: var(--ground-sunk);
+  border-block: 1px solid var(--hairline-soft);
+}
+
+.section-head {
+  max-inline-size: 40rem;
+  margin-block-end: 3rem;
+}
+
+.section-head.is-centred {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.kicker {
+  display: block;
+  margin-block-end: 0.7rem;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 640;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.section-head h2 {
+  font-size: clamp(1.75rem, 3.6vw, 2.4rem);
+}
+
+.section-head p {
+  margin-block-start: 0.9rem;
+  color: var(--ink-soft);
+  font-size: 1.0625rem;
+}
+
+/* --------------------------------------------------------------- features -- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1.25rem;
+}
+
+.card {
+  padding: 1.5rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.card h3 {
+  margin-block: 1rem 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 620;
+}
+
+.card p {
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+}
+
+.card .ico {
+  display: grid;
+  place-items: center;
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--slate-500) 16%, transparent);
+  color: var(--ink);
+}
+
+.card .ico svg {
+  inline-size: 20px;
+  block-size: 20px;
+}
+
+/* -------------------------------------------------------------- spotlight -- */
+
+.spotlight {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 6vw, 4.5rem);
+}
+
+.spotlight + .spotlight {
+  margin-block-start: clamp(3.5rem, 8vw, 5.5rem);
+}
+
+.spotlight:nth-of-type(even) .spotlight__art {
+  order: -1;
+}
+
+.spotlight h3 {
+  font-size: clamp(1.4rem, 2.8vw, 1.85rem);
+}
+
+.spotlight p {
+  margin-block-start: 0.9rem;
+  color: var(--ink-soft);
+  font-size: 1.0313rem;
+}
+
+.spotlight ul {
+  margin-block: 1.25rem 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.spotlight li {
+  display: flex;
+  gap: 0.6rem;
+  color: var(--ink-soft);
+  font-size: 0.9688rem;
+}
+
+.spotlight li svg {
+  flex: none;
+  margin-block-start: 0.3rem;
+  inline-size: 15px;
+  block-size: 15px;
+  color: var(--accent);
+}
+
+.spotlight__art {
+  padding: 1.5rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+/* Style sheet: every cell style, drawn small, the way the gallery tool lays them out. */
+.styles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.styles figure {
+  display: grid;
+  gap: 0.55rem;
+  justify-items: center;
+  margin: 0;
+  padding: 1rem 0.5rem 0.75rem;
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--radius-sm);
+  background: var(--ground);
+  color: var(--ink);
+}
+
+.styles figure svg {
+  block-size: 26px;
+  inline-size: auto;
+  max-inline-size: 100%;
+  overflow: visible;
+}
+
+.styles figcaption {
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+}
+
+.styles .dim {
+  opacity: 0.25;
+}
+
+.styles .soft {
+  opacity: 0.4;
+}
+
+/* The import sheet, as a terminal would print `caliper-bench inspect`. */
+.report {
+  margin: 0;
+  padding: 1.1rem 1.2rem;
+  border-radius: var(--radius);
+  background: var(--slate-900);
+  color: #d9dde5;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.report .p {
+  color: #7e8697;
+}
+
+.report .b {
+  color: #fff;
+  font-weight: 600;
+}
+
+.report .w {
+  color: var(--amber-300);
+}
+
+/* ------------------------------------------------------------ measured -- */
+
+.table-card {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  /* Scrolls rather than clips on a phone; still rounds the corners. */
+  overflow-x: auto;
+}
+
+.table-card table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.table-card th {
+  padding: 0.75rem 1.25rem;
+  background: var(--ground-sunk);
+  color: var(--ink-faint);
+  font-size: 0.75rem;
+  font-weight: 640;
+  letter-spacing: 0.06em;
+  text-align: start;
+  text-transform: uppercase;
+}
+
+.table-card td {
+  padding: 0.75rem 1.25rem;
+  border-block-start: 1px solid var(--hairline-soft);
+  color: var(--ink-soft);
+}
+
+.table-card td:first-child {
+  color: var(--ink);
+}
+
+.verdict {
+  display: inline-block;
+  padding: 0.05rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--slate-500) 16%, transparent);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.verdict--over {
+  background: color-mix(in srgb, var(--warn) 22%, transparent);
+}
+
+.table-note {
+  margin-block-start: 1.25rem;
+  max-inline-size: 46rem;
+  color: var(--ink-soft);
+  font-size: 0.9688rem;
+}
+
+/* ---------------------------------------------------------------- privacy -- */
+
+.perm-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.perm-list li {
+  display: grid;
+  grid-template-columns: 13rem 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 0.9375rem;
+}
+
+.perm-list strong {
+  color: var(--ink);
+  font-weight: 620;
+}
+
+.perm-list span {
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------- close -- */
+
+.closer {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2.5rem, 6vw, 4rem);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(170deg, var(--slate-700), var(--slate-900));
+  color: #fff;
+  text-align: center;
+}
+
+.closer h2 {
+  font-size: clamp(1.65rem, 3.4vw, 2.25rem);
+}
+
+.closer p {
+  margin-block-start: 0.9rem;
+  color: rgb(255 255 255 / 0.78);
+  font-size: 1.0313rem;
+}
+
+.closer .btn--primary {
+  background: #fff;
+  color: var(--slate-900);
+}
+
+.closer .btn--ghost {
+  border-color: rgb(255 255 255 / 0.3);
+  background: transparent;
+  color: #fff;
+}
+
+.closer .btn--ghost:hover {
+  background: rgb(255 255 255 / 0.1);
+  border-color: rgb(255 255 255 / 0.5);
+}
+
+/* --------------------------------------------------------------- footer -- */
+
+footer {
+  padding-block: 2.5rem 3rem;
+  border-block-start: 1px solid var(--hairline);
+  color: var(--ink-faint);
+  font-size: 0.875rem;
+}
+
+footer .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+  margin-inline-start: auto;
+}
+
+footer a {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* ----------------------------------------------------------- responsive -- */
+
+@media (max-width: 860px) {
+  .spotlight {
+    grid-template-columns: 1fr;
+  }
+
+  .spotlight:nth-of-type(even) .spotlight__art {
+    order: 0;
+  }
+}
+
+@media (max-width: 680px) {
+  .masthead nav a:not(.is-cta) {
+    display: none;
+  }
+
+  .mock__frame {
+    padding: 5px;
+    border-radius: 14px;
+  }
+
+  /* The menu bar's own menus would crowd the strip at phone width. */
+  .menubar__more {
+    display: none;
+  }
+
+  .table-card :is(th, td) {
+    padding-inline: 0.85rem;
+  }
+
+  .perm-list li {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .styles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* A line break that only helps once the headline has room for two lines. */
+.only-wide {
+  display: none;
+}
+
+@media (min-width: 560px) {
+  .only-wide {
+    display: inline;
+  }
+}

@@ -1,0 +1,6 @@
+.build/
+.swiftpm/
+build/
+*.xcuserstate
+.DS_Store
+TODO.md

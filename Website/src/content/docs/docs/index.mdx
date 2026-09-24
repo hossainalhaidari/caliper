@@ -1,0 +1,84 @@
+---
+title: Overview
+description: What Caliper is, what it will and will not do, and where to start reading.
+tableOfContents: false
+---
+
+import { Card, CardGrid, LinkCard, Aside } from '@astrojs/starlight/components';
+
+Caliper is a system monitor for the macOS menu bar. You build **widgets** — rows of numbers, graphs
+and gauges — and each one becomes its own menu bar item, or sits on the desktop. They stay in the menu
+bar's own colours until a reading crosses a line you set.
+
+It **collects nothing and sends nothing about you**: everything it measures stays on your Mac, and
+the only request it makes is a daily update check you can turn off. [Privacy](./privacy/) says
+exactly what that request carries.
+
+<Aside title="Why Caliper">
+Named for the instrument: something precise you pick up, take a reading with, and put down again. The
+app is meant to be glanced at and forgotten, and to speak up only when a number crosses a line you
+set.
+</Aside>
+
+<CardGrid>
+  <Card title="Build what you want to see" icon="pencil">
+    CPU, cores, memory, network, disks, GPU, temperatures, fans, power, battery and a clock, drawn as
+    numbers, graphs, donuts, dials, bars or a core matrix.
+  </Card>
+  <Card title="Quiet until it matters" icon="warning">
+    Monochrome by default. Past a threshold a cell turns orange or red, is underlined, and — once
+    the breach has lasted 30 seconds — sends one notification.
+  </Card>
+  <Card title="Glance, then look" icon="magnifier">
+    Click a cell and a panel opens on that metric: its last minute, what it is made of, and the
+    processes behind it.
+  </Card>
+  <Card title="Share a widget" icon="document">
+    Export one as a `.caliperwidget` file. Opening one previews it against your own Mac before
+    anything reaches your menu bar.
+  </Card>
+</CardGrid>
+
+## Start here
+
+<CardGrid>
+  <LinkCard
+    title="Install and run"
+    href="./install/"
+    description="Download it or build it, and what you see on first launch."
+  />
+  <LinkCard
+    title="Widgets and the editor"
+    href="./editor/"
+    description="Adding, arranging, renaming and hiding widgets and their cells."
+  />
+  <LinkCard
+    title="Cell styles"
+    href="./styles/"
+    description="The nine ways to draw a reading, and which metrics each will take."
+  />
+  <LinkCard
+    title="Alerts"
+    href="./alerts/"
+    description="Thresholds, the colours and lines they bring, and the notifications."
+  />
+</CardGrid>
+
+## What it does not do
+
+<Aside type="caution" title="Known limits">
+Some of these are deliberate and some are walls in macOS. They are all written up in
+[Known gaps](./known-gaps/) with the reason, so you can tell which is which before you file a bug.
+</Aside>
+
+- It is **not sandboxed**, and cannot be: temperatures, fans and power come from interfaces the App
+  Store sandbox blocks. It is distributed as a signed, notarised download instead.
+- It **never writes to the hardware**. The fan code can read the SMC and nothing else.
+- It **does not use WidgetKit** for desktop widgets. WidgetKit cannot update every second.
+- It **does not colour the menu bar for decoration**. Colour means a threshold was crossed.
+
+## Conventions in these docs
+
+Menu paths are written the way macOS writes them: *System Settings ▸ General ▸ Login Items*. Anything
+in `monospace` is a literal — a metric id, a file, a command. A **metric id** like `cpu.usage.total`
+is the name a reading has in widget files; [Sensors and metrics](./sensors/) lists them.

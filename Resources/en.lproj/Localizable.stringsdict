@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Caliper -- English plural rules.
+
+     The strings in the app that quote a count. They are here rather than in Localizable.strings
+     because how many forms a count needs is a property of the language: English needs two, Polish
+     three, Arabic six. A `switch` in Swift could only ever offer the two this language happens to
+     want, which is why none of these is decided in code.
+
+     To translate: copy this file into your <code>.lproj beside Localizable.strings and give each
+     NSStringFormatValueTypeKey dictionary the categories your language uses -- zero, one, two, few,
+     many, other. "other" is required; the rest are optional and only "other" is read for a category
+     your language does not have. Keep every key, and keep %lld where it stands.
+-->
+<plist version="1.0">
+<dict>
+	<!-- How many cells a widget has, in the import sheet's list. -->
+	<key>%lld cells</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld cell</string>
+			<key>other</key>
+			<string>%lld cells</string>
+		</dict>
+	</dict>
+
+	<!-- Part of an import report: cells left out because this Mac or this version cannot draw them. -->
+	<key>%lld cells could not be shown</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld cell could not be shown</string>
+			<key>other</key>
+			<string>%lld cells could not be shown</string>
+		</dict>
+	</dict>
+
+	<!-- Part of an import report: metrics the widget uses that this Mac does not have. -->
+	<key>%lld metrics unavailable</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld metric unavailable</string>
+			<key>other</key>
+			<string>%lld metrics unavailable</string>
+		</dict>
+	</dict>
+
+	<!-- Title of the import sheet when a file holds several widgets. -->
+	<key>Add %lld widgets?</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>Add %lld widget?</string>
+			<key>other</key>
+			<string>Add %lld widgets?</string>
+		</dict>
+	</dict>
+	<!-- Help on the editor's Add button once a widget is full. The number is the limit, currently 24. -->
+	<key>A widget can have at most %lld cells.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>A widget can have at most %#@count@.</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld cell</string>
+			<key>other</key>
+			<string>%lld cells</string>
+		</dict>
+	</dict>
+
+	<!-- Import error: a widget has too many cells. The widget's name, its number of cells, then the limit, currently 24. Only the number of cells takes a plural here. -->
+	<key>“%@” has %lld cells, and a widget can have at most %lld. Ask whoever sent it to split it into smaller widgets.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>“%1$@” has %2$#@count@, and a widget can have at most %3$lld. Ask whoever sent it to split it into smaller widgets.</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%2$lld cell</string>
+			<key>other</key>
+			<string>%2$lld cells</string>
+		</dict>
+	</dict>
+
+	<!-- Import error: a shared layout holds too many widgets. The number in the file, then the limit, currently 32. -->
+	<key>This file holds %lld widgets, and Caliper imports at most %lld at a time. Ask whoever sent it for a file with fewer.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>This file holds %1$#@count@, and Caliper imports at most %2$lld at a time. Ask whoever sent it for a file with fewer.</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%1$lld widget</string>
+			<key>other</key>
+			<string>%1$lld widgets</string>
+		</dict>
+	</dict>
+
+	<!-- Import error: a widget's name is too long. Its length, then the limit, currently 64. -->
+	<key>A widget in this file has a name %lld characters long, and a name can be at most %lld.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>A widget in this file has a name %1$#@count@ long, and a name can be at most %2$lld.</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%1$lld character</string>
+			<key>other</key>
+			<string>%1$lld characters</string>
+		</dict>
+	</dict>
+
+	<!-- Import error: some text in a cell is too long. A cell's position counting from 1, a widget's name, a field name from the file kept as it is (label, emoji, symbol, format), its length, then the limit. -->
+	<key>Cell %lld of “%@” has a %@ %lld characters long, and it can be at most %lld.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Cell %1$lld of “%2$@” has a %3$@ %4$#@count@ long, and it can be at most %5$lld.</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%4$lld character</string>
+			<key>other</key>
+			<string>%4$lld characters</string>
+		</dict>
+	</dict>
+
+	<!-- Import error: a widget is wider than any menu bar. The widget's name, its width, then the limit, currently 1200. -->
+	<key>“%@” would be %lld points wide, and a widget can be at most %lld -- about the width of a laptop's whole menu bar. Ask whoever sent it to split it into smaller widgets.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>“%1$@” would be %2$#@count@ wide, and a widget can be at most %3$lld -- about the width of a laptop's whole menu bar. Ask whoever sent it to split it into smaller widgets.</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%2$lld point</string>
+			<key>other</key>
+			<string>%2$lld points</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

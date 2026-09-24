@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: How Caliper works
+    url: https://hossainalhaidari.github.io/caliper/docs/
+    about: The documentation covers widgets, alerts, sharing, sensors, privacy and uninstalling -- and Troubleshooting may already have the answer.

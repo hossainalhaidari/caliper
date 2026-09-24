@@ -1,0 +1,525 @@
+---
+import '../styles/theme.css';
+import '../styles/landing.css';
+import MenuBarMock from '../components/MenuBarMock.astro';
+import { url } from '../lib/url';
+
+const repo = 'https://github.com/hossainalhaidari/caliper';
+const releases = `${repo}/releases`;
+
+const title = 'Caliper — a calm macOS menu bar monitor';
+const description =
+  'A macOS menu bar system monitor that stays quiet until a number crosses a line you set. Widgets, graphs, gauges, temperatures, fans and power, at under 17 MB.';
+
+const features = [
+  {
+    icon: 'items',
+    title: 'Widgets, each its own item',
+    body: 'Every widget is a separate menu bar item that macOS lets you drag into place — CPU at one end, network by the clock. Build as many as you want.',
+  },
+  {
+    icon: 'styles',
+    title: 'Nine ways to draw a number',
+    body: 'Numbers, line and area graphs, histograms, donuts, dials, bars, a core matrix and stacked rates — with captions, SF Symbols, spacers and dividers between them.',
+  },
+  {
+    icon: 'signal',
+    title: 'Colour only when it matters',
+    body: 'Monochrome until a reading crosses a threshold you set. Then orange or red, underlined too, and a notification once it has lasted 30 seconds.',
+  },
+  {
+    icon: 'panel',
+    title: 'Glance, then look',
+    body: 'Click a cell and the detail panel opens on that cell — its history, the facts behind it, the busiest processes — and every other group one click away.',
+  },
+  {
+    icon: 'desktop',
+    title: 'On the desktop, too',
+    body: 'Any widget can live on the wallpaper instead, larger so it reads across a room, above your windows or just behind them.',
+  },
+  {
+    icon: 'share',
+    title: 'Share a widget as a file',
+    body: 'A .caliperwidget is plain JSON. Open one and it is previewed against your own Mac first, with a plain report of anything this machine cannot show.',
+  },
+  {
+    icon: 'thermo',
+    title: 'Sensors most apps miss',
+    body: 'Temperatures, fan speeds, power in watts and GPU load on Apple silicon, from interfaces the App Store sandbox blocks — probed first, and hidden if missing.',
+  },
+  {
+    icon: 'gauge',
+    title: 'Light on the Mac it measures',
+    body: 'One timer for the whole app, hardware read only for cells on screen, and sampling paused while the display sleeps or a widget is hidden.',
+  },
+  {
+    icon: 'lock',
+    title: 'Tells nobody',
+    body: 'No analytics, no crash reports, no account, no server. The one request it makes is a daily update check, and one switch turns that off.',
+  },
+];
+
+const icons: Record<string, string> = {
+  items:
+    '<rect x="2.5" y="5" width="19" height="5" rx="1.5"/><path d="M8 7.5h3M14 7.5h1.5M18 7.5h1"/><path d="M6 14v5M12 14v5M18 14v5" opacity=".45"/>',
+  styles:
+    '<path d="M3 17l4-5 3 3 4-7 3 4 4-3"/><circle cx="7" cy="7" r="0.1"/>',
+  signal:
+    '<path d="M4 16.5h6M14 16.5h6" /><path d="M4 20h2.2M8.2 20h2.2M14 20h6" stroke-width="1.8"/><path d="M5 12.5l2.5-5 2.5 5M15 12.5l2.5-5 2.5 5"/>',
+  panel:
+    '<rect x="4" y="6" width="16" height="14" rx="2.5"/><path d="M12 3l-2 3h4z" fill="currentColor"/><path d="M7 14l2.5-2 2.5 1.5 4.5-3.5"/>',
+  desktop:
+    '<rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/><rect x="11.5" y="11" width="7" height="3" rx="1"/>',
+  share:
+    '<path d="M12 3.5v11M8 7.5l4-4 4 4"/><path d="M5 12.5v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>',
+  thermo:
+    '<path d="M10 14.5V5a2 2 0 1 1 4 0v9.5a4 4 0 1 1-4 0Z"/><path d="M12 10v6"/>',
+  gauge:
+    '<path d="M4.5 17.5a8.5 8.5 0 1 1 15 0"/><path d="M12 15l3.5-4.5"/><circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none"/>',
+  lock:
+    '<rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>',
+};
+
+const check =
+  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.4 12 13 4.6" /></svg>';
+
+const privacy = [
+  ['Everything it measures', 'Stays on this Mac, in memory, for the graphs — load, memory, temperatures, the busiest processes. Gone when the app quits.'],
+  ['Your widgets', 'Written to one file in Application Support, and nowhere else. They leave only when you export or copy one.'],
+  ['The update check', 'Once a day, to GitHub: the same request from every copy, with nothing about your Mac in it. One menu item switches it off.'],
+  ['Everything else', 'There is nothing else. No analytics, no crash reporting, no account, and no server of Caliper’s own to send anything to.'],
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="canonical" href={new URL(url('/'), Astro.site ?? 'https://example.com')} />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
+    <script is:inline>
+      // Runs before first paint, and reads the same key Starlight's theme
+      // selector writes, so a choice made in the docs is honoured here too.
+      try {
+        const stored = localStorage.getItem('starlight-theme');
+        if (stored === 'light' || stored === 'dark') {
+          document.documentElement.dataset.theme = stored;
+        }
+      } catch {}
+    </script>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="masthead" data-masthead>
+      <div class="wrap masthead__inner">
+        <a class="brand" href={url('/')}>
+          <img src={url('/favicon.svg')} width="28" height="28" alt="" />
+          Caliper
+        </a>
+        <nav>
+          <a href="#features">Features</a>
+          <a href="#measured">Measured</a>
+          <a href="#privacy">Privacy</a>
+          <a href={url('/docs/')}>Docs</a>
+          <a href={repo}>GitHub</a>
+          <button
+            class="theme-toggle"
+            type="button"
+            data-theme-toggle
+            aria-label="Switch between light and dark"
+          >
+            <svg class="sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+              <circle cx="12" cy="12" r="4.2" /><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6" />
+            </svg>
+            <svg class="moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+              <path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z" />
+            </svg>
+          </button>
+          <a class="is-cta" href={releases}>Download</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ------------------------------------------------------------ hero -->
+      <section class="hero">
+        <div class="wrap">
+          <div class="hero__inner">
+            <a class="eyebrow" href={repo}>
+              <b>Open source</b> Built in Swift, for macOS
+            </a>
+            <h1>
+              Glance at it, forget it,<br class="only-wide" />
+              <span class="grad">until something is wrong.</span>
+            </h1>
+            <p class="lede">
+              Caliper is a system monitor for the macOS menu bar. Build widgets from graphs,
+              gauges and numbers, put them where you want them, and let them stay quiet — in
+              the menu bar's own colours — until a reading crosses a line you set.
+            </p>
+            <div class="cta-row">
+              <a class="btn btn--primary" href={releases}>
+                Download for macOS
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3.5v12M6.8 10.6 12 15.8l5.2-5.2M4.5 19.5h15" />
+                </svg>
+              </a>
+              <a class="btn btn--ghost" href={url('/docs/')}>Read the docs</a>
+            </div>
+            <p class="hero__note">
+              Free and open source. macOS 14 or later, signed and notarised, and it never
+              sends anything about your Mac anywhere.
+            </p>
+          </div>
+
+          <MenuBarMock />
+        </div>
+      </section>
+
+      <!-- -------------------------------------------------------- features -->
+      <section id="features" class="sunk">
+        <div class="wrap">
+          <div class="section-head is-centred">
+            <span class="kicker">What it does</span>
+            <h2>An instrument, not a dashboard</h2>
+            <p>
+              A dashboard wants to be looked at. An instrument is picked up, read, and put down
+              again — so Caliper is built for the hours you are not reading it.
+            </p>
+          </div>
+          <div class="grid">
+            {
+              features.map((feature) => (
+                <article class="card">
+                  <div class="ico">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                      set:html={icons[feature.icon]}
+                    />
+                  </div>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.body}</p>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------ spotlights -->
+      <section>
+        <div class="wrap">
+          <div class="section-head">
+            <span class="kicker">A closer look</span>
+            <h2>Three things worth the tour</h2>
+          </div>
+
+          <div class="spotlight">
+            <div>
+              <h3>Numbers that do not dance</h3>
+              <p>
+                Every cell reserves the width of the widest thing it could ever show, and digits
+                are tabular. A reading going from 9% to 10% moves the digits inside the cell — it
+                never shoves the rest of your menu bar sideways.
+              </p>
+              <ul>
+                <li>
+                  <Fragment set:html={check} />
+                  A missing sensor shows an en dash at full width, never a zero that lies about the
+                  hardware.
+                </li>
+                <li>
+                  <Fragment set:html={check} />
+                  Percentages never auto-scale, so 5% always looks like 5%.
+                </li>
+                <li>
+                  <Fragment set:html={check} />
+                  Donuts, dials and bars refuse a metric with no maximum, and the editor says why.
+                </li>
+              </ul>
+            </div>
+            <div class="spotlight__art">
+              <div class="styles" aria-label="The nine cell styles">
+                <figure>
+                  <svg viewBox="0 0 64 26" aria-hidden="true">
+                    <text x="0" y="18" font-size="10" fill="currentColor" class="soft" font-family="-apple-system, system-ui, sans-serif">CPU</text>
+                    <text x="64" y="18" font-size="13" fill="currentColor" text-anchor="end" font-family="-apple-system, system-ui, sans-serif" style="font-variant-numeric: tabular-nums">23%</text>
+                  </svg>
+                  <figcaption>text.value</figcaption>
+                </figure>
+                <figure>
+                  <svg viewBox="0 0 64 26" aria-hidden="true">
+                    <path d="M0 20 L6 18 L12 19 L18 12 L24 15 L30 9 L36 14 L42 16 L48 7 L54 11 L60 13 L64 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                  </svg>
+                  <figcaption>graph · line</figcaption>
+                </figure>
+                <figure>
+                  <svg viewBox="0 0 64 26" aria-hidden="true">
+                    <path d="M0 26 L0 20 L6 18 L12 19 L18 12 L24 15 L30 9 L36 14 L42 16 L48 7 L54 11 L60 13 L64 12 L64 26 Z" fill="currentColor" class="soft" />
+                    <path d="M0 20 L6 18 L12 19 L18 12 L24 15 L30 9 L36 14 L42 16 L48 7 L54 11 L60 13 L64 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                  </svg>
+                  <figcaption>graph · area</figcaption>
+                </figure>
+                <figure>
+                  <svg viewBox="0 0 64 26" aria-hidden="true" fill="currentColor">
+                    <rect x="0" y="18" width="4" height="8" /><rect x="5.5" y="15" width="4" height="11" /><rect x="11" y="19" width="4" height="7" /><rect x="16.5" y="10" width="4" height="16" /><rect x="22" y="13" width="4" height="13" /><rect x="27.5" y="6" width="4" height="20" /><rect x="33" y="12" width="4" height="14" /><rect x="38.5" y="17" width="4" height="9" /><rect x="44" y="8" width="4" height="18" /><rect x="49.5" y="14" width="4" height="12" /><rect x="55" y="16" width="4" height="10" /><rect x="60.5" y="12" width="3.5" height="14" />
+                  </svg>
+                  <figcaption>graph.histogram</figcaption>
+                </figure>
+                <figure>
+                  <svg viewBox="0 0 26 26" aria-hidden="true">
+                    <circle cx="13" cy="13" r="9.5" fill="none" stroke="currentColor" stroke-width="4.5" class="dim" />
+                    <circle cx="13" cy="13" r="9.5" fill="none" stroke="currentColor" stroke-width="4.5" pathLength="100" stroke-dasharray="61 100" transform="rotate(-90 13 13)" />
+                  </svg>
+                  <figcaption>gauge.donut</figcaption>
+                </figure>
+                <figure>
+                  <svg viewBox="0 0 26 26" aria-hidden="true">
+                    <path d="M6.3 19.7 A9.5 9.5 0 1 1 19.7 19.7" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" class="dim" />
+                    <path d="M6.3 19.7 A9.5 9.5 0 0 1 16.2 4.1" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" />
+                  </svg>
+                  <figcaption>gauge.arc</figcaption>
+                </figure>
+                <figure>
+                  <svg viewBox="0 0 64 26" aria-hidden="true">
+                    <rect x="0" y="10" width="64" height="7" rx="3.5" fill="currentColor" class="dim" />
+                    <rect x="0" y="10" width="40" height="7" rx="3.5" fill="currentColor" />
+                  </svg>
+                  <figcaption>gauge.bar</figcaption>
+                </figure>
+                <figure>
+                  <svg viewBox="0 0 64 26" aria-hidden="true" fill="currentColor">
+                    <rect x="0" y="16" width="4" height="10" /><rect x="5" y="20" width="4" height="6" /><rect x="10" y="12" width="4" height="14" /><rect x="15" y="21" width="4" height="5" />
+                    <rect x="25" y="6" width="4" height="20" /><rect x="30" y="10" width="4" height="16" /><rect x="35" y="3" width="4" height="23" /><rect x="40" y="14" width="4" height="12" /><rect x="45" y="8" width="4" height="18" /><rect x="50" y="17" width="4" height="9" />
+                  </svg>
+                  <figcaption>matrix.cores</figcaption>
+                </figure>
+                <figure>
+                  <svg viewBox="0 0 64 26" aria-hidden="true" font-family="-apple-system, system-ui, sans-serif" font-size="9.5" fill="currentColor" style="font-variant-numeric: tabular-nums">
+                    <text x="0" y="10.5">↓</text><text x="36" y="10.5" text-anchor="end">1.2</text><text x="39" y="10.5">MB/s</text>
+                    <text x="0" y="23">↑</text><text x="36" y="23" text-anchor="end">84</text><text x="39" y="23">KB/s</text>
+                  </svg>
+                  <figcaption>text.dual-rate</figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+
+          <div class="spotlight">
+            <div>
+              <h3>Nothing lands in your menu bar unseen</h3>
+              <p>
+                Open someone's widget and Caliper draws it against <em>your</em> live data — not a
+                screenshot of their machine — next to a plain account of what this Mac cannot show.
+              </p>
+              <ul>
+                <li>
+                  <Fragment set:html={check} />
+                  A metric you lack keeps its cell and shows a dash, so the layout holds its shape.
+                </li>
+                <li>
+                  <Fragment set:html={check} />
+                  A file too big to be a widget is refused with the reason, before anything is
+                  drawn.
+                </li>
+                <li>
+                  <Fragment set:html={check} />
+                  Paste it, open it, drop it on the editor or double-click it in Finder.
+                </li>
+              </ul>
+            </div>
+            <div class="spotlight__art">
+              <pre class="report"><span class="p">$</span> caliper-bench inspect Workstation.caliperwidget
+
+  <span class="b">Workstation</span>  --  5 cells, at most 212pt wide
+  by someone else
+  <span class="w">2 metrics unavailable, 1 cell could not be shown</span>
+    degraded: gpu.0.utilization
+              is not available on this Mac
+    degraded: sensor.thermal.cpu-die
+              is not available on this Mac
+    dropped:  gauge.donut cannot show
+              net.throughput.down, which
+              has no fixed maximum</pre>
+            </div>
+          </div>
+
+          <div class="spotlight">
+            <div>
+              <h3>Temperatures that mean something</h3>
+              <p>
+                An M4 publishes 47 thermal sensors, and not one has a useful name. Caliper reads
+                them all and gives you the four that mean the same thing on every Mac — with every
+                raw sensor still there, in an Advanced group, for anyone who wants it.
+              </p>
+              <ul>
+                <li>
+                  <Fragment set:html={check} />
+                  Fans come from the SMC, read-only for good: nothing here can change a fan's speed.
+                </li>
+                <li>
+                  <Fragment set:html={check} />
+                  Power in watts for the CPU, GPU, Neural Engine and memory, and GPU load.
+                </li>
+                <li>
+                  <Fragment set:html={check} />
+                  A macOS update that moves an interface removes those metrics — it never leaves a
+                  row of permanent dashes.
+                </li>
+              </ul>
+            </div>
+            <div class="spotlight__art">
+              <pre class="report"><span class="p">$</span> make sensors
+
+  <span class="b">Temperature  (4)</span>
+    thermal.average                  31.4°
+    thermal.battery                  29.0°
+    thermal.peak                     32.5°
+    thermal.storage                  --
+
+  <span class="b">Temperature (Advanced)  (47)</span>
+    thermal.sensor.pmu-tdie14        33.7°
+    thermal.sensor.pmu2-tdev1        --
+    <span class="p">…</span>
+
+  <span class="b">Power  (5)</span>
+    power.gpu.watts                  0.2 W
+    power.total.watts                0.2 W</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- -------------------------------------------------------- measured -->
+      <section id="measured" class="sunk">
+        <div class="wrap">
+          <div class="section-head">
+            <span class="kicker">Measured, not promised</span>
+            <h2>What it costs, including where it falls short</h2>
+            <p>
+              A menu bar app runs all day, so its cost is a feature. These are measured on an
+              Apple M4, running the built app with the default widget — and the budget is not moved
+              to fit the measurement.
+            </p>
+          </div>
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr><th>What</th><th>Measured</th><th>Budget</th><th></th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Memory, resident</td><td>16.4 MB</td><td>30 MB</td><td><span class="verdict">within</span></td></tr>
+                <tr><td>CPU, the sampling and drawing pipeline</td><td>0.10%</td><td>0.3%</td><td><span class="verdict">within</span></td></tr>
+                <tr><td>CPU, a menu bar item that redraws every second</td><td>0.68%</td><td>0.3%</td><td><span class="verdict verdict--over">over</span></td></tr>
+                <tr><td>A desktop widget, always on screen</td><td>+1.9 MB, +0.009%</td><td>—</td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">
+            The one line over budget is macOS redrawing a status item's image — Caliper's own work is
+            57 microseconds of it. The route back under is known and written down, and
+            <a href={url('/docs/performance/')}>What it costs</a> has the whole account.
+          </p>
+        </div>
+      </section>
+
+      <!-- --------------------------------------------------------- privacy -->
+      <section id="privacy">
+        <div class="wrap">
+          <div class="section-head">
+            <span class="kicker">Privacy</span>
+            <h2>It reads your Mac and tells nobody</h2>
+            <p>
+              Not a setting to find and switch off. The telemetry was never written.
+            </p>
+          </div>
+          <ul class="perm-list">
+            {
+              privacy.map(([name, what]) => (
+                <li>
+                  <strong>{name}</strong>
+                  <span>{what}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+
+      <!-- ----------------------------------------------------------- close -->
+      <section>
+        <div class="wrap">
+          <div class="closer">
+            <h2>Put an instrument in your menu bar</h2>
+            <p>
+              Install it, keep the default widget or build your own, and read the docs when you
+              want the parts that are not obvious.
+            </p>
+            <div class="cta-row">
+              <a class="btn btn--primary" href={releases}>Download for macOS</a>
+              <a class="btn btn--ghost" href={url('/docs/install/')}>Build from source</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>Caliper — named for the instrument: precise, picked up, read, and put down again.</span>
+        <nav>
+          <a href={url('/docs/')}>Documentation</a>
+          <a href={url('/docs/format/')}>Widget format</a>
+          <a href={url('/docs/privacy/')}>Privacy</a>
+          <a href={url('/docs/troubleshooting/')}>Troubleshooting</a>
+          <a href={repo}>Source</a>
+          <a href={`${repo}/blob/main/LICENSE`}>MIT License</a>
+          <a href={url('/docs/transparency/')}>Transparency</a>
+          <a href={`${repo}/issues`}>Issues</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script is:inline>
+      // Theme toggle. Writes the key Starlight reads, so the choice survives the
+      // walk from here into the docs and back.
+      const root = document.documentElement;
+      const toggle = document.querySelector('[data-theme-toggle]');
+
+      const current = () =>
+        root.dataset.theme ??
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+      toggle?.addEventListener('click', () => {
+        const next = current() === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('starlight-theme', next);
+        } catch {}
+      });
+
+      // Hairline under the header, once it has something to separate.
+      const masthead = document.querySelector('[data-masthead]');
+      const onScroll = () => {
+        masthead?.setAttribute('data-stuck', String(window.scrollY > 8));
+      };
+      onScroll();
+      addEventListener('scroll', onScroll, { passive: true });
+    </script>
+  </body>
+</html>

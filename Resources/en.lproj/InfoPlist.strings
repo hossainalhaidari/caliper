@@ -1,0 +1,22 @@
+/* Caliper -- English (development language)
+
+   The strings that live in Info.plist rather than in code: the ones macOS itself shows, before and
+   outside the app's own windows. The first ones are keyed by their Info.plist key, which is what the
+   bundle loader looks them up by; a document type's name is keyed by its English text instead.
+
+   To add a language, copy this file into your <code>.lproj beside Localizable.strings and translate
+   only the value on the right of each "=".
+*/
+
+/* The app's name. A proper noun -- translate it only if the name itself changes in your language. */
+"CFBundleName" = "Caliper";
+
+/* The app's name as Finder and the Dock show it. As above. */
+"CFBundleDisplayName" = "Caliper";
+
+/* The copyright line at the foot of the About panel and of Finder's Get Info window. Keep the
+   name as it is; translate only the word "Copyright" where your language has its own. */
+"NSHumanReadableCopyright" = "Copyright © 2026 Hossain Alhaidari";
+
+/* The kind of file a shared .caliperwidget is, in Finder's Kind column and Get Info window. */
+"Caliper Widget" = "Caliper Widget";

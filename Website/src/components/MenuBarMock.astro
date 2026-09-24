@@ -1,0 +1,252 @@
+---
+/**
+ * The homepage's illustration: a drawn Mac desktop with Caliper's default widget in the menu bar,
+ * the detail panel open under it, and the same widget sitting on the desktop.
+ *
+ * Not a screenshot. Every piece is an element styled in container-query units, so it scales with
+ * the frame, follows the page's light and dark themes, and genuinely redraws: the numbers and the
+ * graph are fed once a second, and the switcher underneath pushes the CPU reading past its
+ * thresholds to show the one time Caliper uses colour.
+ *
+ * The strip is the one a fresh install starts with (SchemaKit/DefaultLayout.swift): a CPU number,
+ * a 60-second CPU area graph, a memory donut, and download over upload in one stacked cell.
+ */
+
+// Seed the graph so the first paint, and a reader who prefers reduced motion, see a real trace.
+const seed = [
+  14, 12, 15, 18, 13, 11, 12, 16, 22, 19, 14, 12, 11, 13, 17, 24, 31, 27, 19, 15, 13, 12, 14, 13,
+  12, 15, 21, 18, 14, 12, 11, 12, 14, 16, 13, 12, 18, 26, 22, 17, 14, 12, 13, 15, 14, 12, 11, 13,
+  16, 20, 17, 14, 13, 12, 15, 19, 16, 14, 13, 14,
+];
+
+function graph(values: number[]) {
+  const points = values.map((v, i) => `${i},${(20 - (v / 100) * 20).toFixed(2)}`).join(' L');
+  return {
+    area: `M0,20 L${points} L${values.length - 1},20 Z`,
+    line: `M${points}`,
+  };
+}
+
+const initial = graph(seed);
+const cpu = seed[seed.length - 1];
+---
+
+<div class="mock" data-mock data-state="nominal">
+  <div class="mock__frame">
+    <div class="mock__screen">
+      <!-- ------------------------------------------------------------ menu bar -->
+      <div class="menubar">
+        <svg class="menubar__apple" viewBox="0 0 14 17" aria-hidden="true">
+          <path fill="currentColor" d="M11.6 9c0-2 1.7-3 1.8-3-1-1.4-2.5-1.6-3-1.7-1.3-.1-2.5.8-3.2.8-.6 0-1.6-.7-2.7-.7C3.1 4.4 1.8 5.2 1 6.5-.5 9.1.6 13 2.1 15.1c.7 1 1.5 2.2 2.6 2.1 1-.1 1.4-.7 2.7-.7 1.2 0 1.6.7 2.7.6 1.1 0 1.8-1 2.5-2.1.8-1.2 1.1-2.3 1.1-2.4 0 0-2.1-.8-2.1-3.6ZM9.6 3c.6-.7 1-1.7.9-2.7-.9 0-1.9.6-2.5 1.3-.5.6-1 1.6-.9 2.6 1 .1 1.9-.5 2.5-1.2Z" />
+        </svg>
+        <b>Finder</b>
+        <span>File</span><span>Edit</span><span>View</span><span>Go</span><span class="menubar__more">Window</span><span class="menubar__more">Help</span>
+
+        <span class="menubar__grow"></span>
+
+        <!-- Caliper's widget: one status item, one drawn image -->
+        <span class="strip" role="img" aria-label="Caliper's default widget in the menu bar">
+          <span class="cell cell--text" data-alerting>
+            <span class="cell__label">CPU</span>
+            <span class="cell__num" data-bind="cpu">{cpu}</span>
+            <span class="cell__unit">%</span>
+          </span>
+          <span class="cell cell--graph" data-alerting>
+            <svg viewBox="0 0 59 20" preserveAspectRatio="none">
+              <path class="graph__area" data-graph="area" d={initial.area} />
+              <path class="graph__line" data-graph="line" d={initial.line} />
+            </svg>
+          </span>
+          <span class="cell cell--donut">
+            <svg viewBox="0 0 20 20">
+              <circle class="donut__track" cx="10" cy="10" r="7.2" />
+              <circle class="donut__value" data-bind-donut cx="10" cy="10" r="7.2" pathLength="100" stroke-dasharray="61 100" />
+            </svg>
+          </span>
+          <span class="cell cell--rates">
+            <span>↓</span><span class="cell__num" data-bind="down">1.2</span><span class="cell__unit" data-bind="down-unit">MB/s</span>
+            <span>↑</span><span class="cell__num" data-bind="up">84</span><span class="cell__unit" data-bind="up-unit">KB/s</span>
+          </span>
+        </span>
+
+        <svg class="menubar__glyph" viewBox="0 0 20 14" aria-hidden="true">
+          <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M2 5.2a11.5 11.5 0 0 1 16 0M4.8 8a7.5 7.5 0 0 1 10.4 0M7.6 10.8a3.5 3.5 0 0 1 4.8 0" />
+        </svg>
+        <svg class="menubar__glyph menubar__battery" viewBox="0 0 26 13" aria-hidden="true">
+          <rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.2" />
+          <rect x="3" y="3" width="13" height="7" rx="1.4" fill="currentColor" />
+          <path d="M23.6 4.6v3.8" stroke="currentColor" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+        <span class="menubar__clock" data-clock>Tue 23 Sep 14:02</span>
+      </div>
+
+      <!-- ------------------------------------------------------- a window -->
+      <div class="window" aria-hidden="true">
+        <div class="window__bar">
+          <i class="window__light window__light--r"></i><i class="window__light window__light--y"></i><i class="window__light window__light--g"></i>
+        </div>
+        <div class="window__body">
+          <i style="--w: 38%"></i><i style="--w: 84%"></i><i style="--w: 71%"></i><i style="--w: 90%"></i><i style="--w: 52%"></i><i style="--w: 0%"></i><i style="--w: 78%"></i><i style="--w: 66%"></i><i style="--w: 44%"></i>
+        </div>
+      </div>
+
+      <!-- -------------------------------------------------- the detail panel -->
+      <div class="panel" aria-hidden="true">
+        <div class="panel__head">
+          <span>CPU</span>
+          <b><span data-bind="cpu">{cpu}</span>%</b>
+        </div>
+        <svg class="panel__spark" viewBox="0 0 59 20" preserveAspectRatio="none">
+          <path class="graph__area" data-graph="area" d={initial.area} />
+          <path class="graph__line" data-graph="line" d={initial.line} />
+        </svg>
+        <dl class="panel__rows">
+          <dt>User</dt><dd><span data-bind="user">9</span>%</dd>
+          <dt>System</dt><dd><span data-bind="system">5</span>%</dd>
+          <dt>Top process</dt><dd>Xcode</dd>
+        </dl>
+        <div class="panel__chips">
+          <span class="is-on">CPU</span><span>Memory</span><span>Network</span><span>Disk</span>
+        </div>
+      </div>
+
+      <!-- -------------------------------------------------- a desktop widget -->
+      <div class="desk" aria-hidden="true">
+        <span class="strip strip--desk">
+          <span class="cell cell--text" data-alerting>
+            <span class="cell__label">CPU</span>
+            <span class="cell__num" data-bind="cpu">{cpu}</span>
+            <span class="cell__unit">%</span>
+          </span>
+          <span class="cell cell--graph" data-alerting>
+            <svg viewBox="0 0 59 20" preserveAspectRatio="none">
+              <path class="graph__area" data-graph="area" d={initial.area} />
+              <path class="graph__line" data-graph="line" d={initial.line} />
+            </svg>
+          </span>
+          <span class="cell cell--donut">
+            <svg viewBox="0 0 20 20">
+              <circle class="donut__track" cx="10" cy="10" r="7.2" />
+              <circle class="donut__value" data-bind-donut cx="10" cy="10" r="7.2" pathLength="100" stroke-dasharray="61 100" />
+            </svg>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mock__switch">
+    <span class="mock__switch-label" id="mock-switch-label">Push the CPU past a threshold</span>
+    <div class="mock__switch-group" role="group" aria-labelledby="mock-switch-label">
+      <button type="button" data-state="nominal" aria-pressed="true">Nominal</button>
+      <button type="button" data-state="warning" aria-pressed="false">Warning</button>
+      <button type="button" data-state="critical" aria-pressed="false">Critical</button>
+    </div>
+    <p class="mock__caption" data-caption aria-live="polite">
+      Monochrome, tinted by macOS like its own menu bar items. This is what Caliper looks like almost
+      all of the time.
+    </p>
+  </div>
+</div>
+
+<script is:inline define:vars={{ seed }}>
+  (() => {
+    const mock = document.querySelector('[data-mock]');
+    if (!mock) return;
+
+    const captions = {
+      nominal:
+        'Monochrome, tinted by macOS like its own menu bar items. This is what Caliper looks like almost all of the time.',
+      warning:
+        'Past the warning threshold you set: orange, with a dashed underline. Held for 30 seconds, it also sends one notification.',
+      critical:
+        'Past the critical threshold: red, with a solid underline. Colour is never the only signal, so the line says it too.',
+    };
+    // Where the reading sits in each state. The thresholds are the default widget's: 70 and 90.
+    const bands = { nominal: [6, 38], warning: [74, 86], critical: [92, 99] };
+
+    let state = 'nominal';
+    const history = seed.slice();
+
+    const all = (selector) => mock.querySelectorAll(selector);
+    const set = (key, text) => all(`[data-bind="${key}"]`).forEach((el) => (el.textContent = text));
+    const clamp = (v, [lo, hi]) => Math.min(hi, Math.max(lo, v));
+
+    // A wander rather than noise: a real CPU trace has runs, not independent samples.
+    function next(previous) {
+      const band = bands[state];
+      const outside = previous < band[0] || previous > band[1];
+      if (outside) return clamp(previous + (band[0] + band[1]) / 2 - previous, band);
+      return clamp(previous + (Math.random() - 0.5) * 9, band);
+    }
+
+    // The same 1024-radix units the app uses: bytes scale in powers of two.
+    function rate(bytes) {
+      if (bytes >= 1024 * 1024) return [(bytes / 1024 / 1024).toFixed(1), 'MB/s'];
+      return [Math.max(1, Math.round(bytes / 1024)).toString(), 'KB/s'];
+    }
+
+    function drawGraph() {
+      // Percentages never auto-scale: the graph is always 0 to 100.
+      const points = history.map((v, i) => `${i},${(20 - (v / 100) * 20).toFixed(2)}`).join(' L');
+      all('[data-graph="area"]').forEach((p) => p.setAttribute('d', `M0,20 L${points} L${history.length - 1},20 Z`));
+      all('[data-graph="line"]').forEach((p) => p.setAttribute('d', `M${points}`));
+    }
+
+    let memory = 61;
+    function tick() {
+      const cpu = Math.round(next(history[history.length - 1]));
+      history.push(cpu);
+      history.shift();
+
+      set('cpu', cpu);
+      set('user', Math.round(cpu * 0.64));
+      set('system', cpu - Math.round(cpu * 0.64));
+      drawGraph();
+
+      memory = clamp(memory + (Math.random() - 0.5) * 1.2, [58, 66]);
+      all('[data-bind-donut]').forEach((c) => c.setAttribute('stroke-dasharray', `${memory.toFixed(1)} 100`));
+
+      const [down, downUnit] = rate(Math.random() < 0.7 ? 40_000 + Math.random() * 900_000 : 1_200_000 + Math.random() * 6_000_000);
+      const [up, upUnit] = rate(8_000 + Math.random() * 180_000);
+      set('down', down);
+      set('down-unit', downUnit);
+      set('up', up);
+      set('up-unit', upUnit);
+
+      // Spelled out rather than left to toLocaleString, whose short month varies by engine ("Sep",
+      // "Sept"). This is a drawing of an English menu bar, not the reader's own.
+      const now = new Date();
+      const clock = mock.querySelector('[data-clock]');
+      if (clock) {
+        const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][now.getDay()];
+        const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][now.getMonth()];
+        const pad = (n) => String(n).padStart(2, '0');
+        clock.textContent = `${day} ${now.getDate()} ${month} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+      }
+    }
+
+    mock.querySelectorAll('.mock__switch-group button').forEach((button) => {
+      button.addEventListener('click', () => {
+        state = button.dataset.state;
+        mock.dataset.state = state;
+        mock.querySelectorAll('.mock__switch-group button').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+        const caption = mock.querySelector('[data-caption]');
+        if (caption) caption.textContent = captions[state];
+        tick();
+      });
+    });
+
+    tick();
+
+    // One timer for the whole page, like the app, and it stops while nobody can see the page --
+    // or for a reader who asked for less motion, who gets a still picture that still answers the
+    // switcher.
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let timer = setInterval(tick, 1000);
+    document.addEventListener('visibilitychange', () => {
+      clearInterval(timer);
+      if (document.visibilityState === 'visible') timer = setInterval(tick, 1000);
+    });
+  })();
+</script>

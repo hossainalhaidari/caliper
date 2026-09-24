@@ -1,0 +1,129 @@
+/* Starlight theming.
+
+   Starlight is dark-first: its own values sit on :root and the light set sits on
+   :root[data-theme='light']. This file follows that convention rather than
+   fighting it, and feeds Starlight the same palette theme.css gives the landing
+   page, so moving between the homepage and the docs is not a change of site. */
+
+:root {
+  --sl-color-accent-low: #3a2410;
+  --sl-color-accent: #d9822b;
+  --sl-color-accent-high: #ffd3a3;
+
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #eceef2;
+  --sl-color-gray-2: #c6cad3;
+  --sl-color-gray-3: #939aa8;
+  --sl-color-gray-4: #5f6676;
+  --sl-color-gray-5: #3d4350;
+  --sl-color-gray-6: #2a2f3a;
+  --sl-color-gray-7: #1a1d24;
+  --sl-color-black: #0f1115;
+
+  --sl-color-bg: #0f1115;
+  --sl-color-bg-nav: rgb(20 23 29 / 0.85);
+  --sl-color-bg-sidebar: #14171d;
+
+  /* Notes are slate, not Starlight's blue: amber is kept for the accent, as in the app. */
+  --sl-color-blue-low: #1d2430;
+  --sl-color-blue: #93a4bf;
+  --sl-color-blue-high: #d8dee8;
+
+  --sl-font: var(--font-sans);
+  --sl-font-mono: var(--font-mono);
+
+  --sl-content-width: 50rem;
+  --sl-nav-height: 3.75rem;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #fbe6cf;
+  --sl-color-accent: #b45309;
+  --sl-color-accent-high: #6b3207;
+
+  --sl-color-white: #14171d;
+  --sl-color-gray-1: #1e222b;
+  --sl-color-gray-2: #3a404d;
+  --sl-color-gray-3: #5f6676;
+  --sl-color-gray-4: #7e8697;
+  --sl-color-gray-5: #b8bdc8;
+  --sl-color-gray-6: #e0e3e9;
+  --sl-color-gray-7: #eceef2;
+  --sl-color-black: #ffffff;
+
+  --sl-color-bg: #ffffff;
+  --sl-color-bg-nav: rgb(255 255 255 / 0.85);
+  --sl-color-bg-sidebar: #f8f9fa;
+
+  --sl-color-blue-low: #e8ecf2;
+  --sl-color-blue: #4a5b76;
+  --sl-color-blue-high: #1f2a3c;
+}
+
+/* --- Chrome ------------------------------------------------------------- */
+
+header.header {
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* The name reads as ink, like the homepage's; amber is for what needs the eye. */
+.site-title {
+  color: var(--sl-color-white);
+}
+
+/* --- Content ------------------------------------------------------------ */
+
+.sl-markdown-content h2 {
+  padding-block-end: 0.3em;
+  border-block-end: 1px solid var(--sl-color-gray-6);
+}
+
+.sl-markdown-content :is(h2, h3, h4) {
+  letter-spacing: -0.012em;
+}
+
+.sl-markdown-content kbd,
+.sl-markdown-content :not(pre) > code {
+  font-variant-ligatures: none;
+}
+
+/* Tables carry a lot of this documentation: the styles, the metric ids, the
+   limits a shared file is held to. They earn some room to breathe. */
+.sl-markdown-content table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: var(--sl-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.sl-markdown-content :is(th, td) {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--sl-color-gray-6);
+  vertical-align: top;
+}
+
+.sl-markdown-content th {
+  background: var(--sl-color-gray-7);
+  text-align: start;
+  font-weight: 600;
+}
+
+.sl-markdown-content td:first-child {
+  white-space: nowrap;
+}
+
+/* A two-column table with an empty header row is this project's idiom for a
+   term list. Hide the blank header rather than leaving a stripe of nothing. */
+.sl-markdown-content table:has(th:empty:only-of-type) thead,
+.sl-markdown-content table:has(thead th:empty + th:empty) thead {
+  display: none;
+}
+
+/* --- Footer ------------------------------------------------------------- */
+
+footer.sl-flex {
+  border-block-start: 1px solid var(--sl-color-gray-6);
+  padding-block-start: 1.5rem;
+}

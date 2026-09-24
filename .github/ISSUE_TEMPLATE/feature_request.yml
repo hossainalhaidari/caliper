@@ -1,0 +1,23 @@
+name: Idea
+description: Something Caliper could do that it does not.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Caliper aims to be a calm instrument rather than a dashboard: glanced at, then forgotten, until something is actually wrong. [ARCHITECTURE.md](https://github.com/hossainalhaidari/caliper/blob/main/ARCHITECTURE.md) says what that means in practice, and it is the yardstick an idea is held to.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you are trying to do
+      description: The situation, rather than the feature. "I want to know when my backup drive is nearly full" says more than "add disk alerts".
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help
+  - type: textarea
+    id: now
+    attributes:
+      label: What you do today instead

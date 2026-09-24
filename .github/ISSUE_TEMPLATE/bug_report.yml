@@ -1,0 +1,53 @@
+name: Bug report
+description: Something in Caliper does not work the way it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. Caliper sends no crash reports or telemetry, so what you write here is all anyone will know about the problem.
+
+        A sensor that is missing or reads wrong has its own template.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: And what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to make it happen
+      description: The shortest route there. "It happens every time I open the editor" is a fine answer.
+      placeholder: |
+        1.
+        2.
+        3.
+  - type: input
+    id: version
+    attributes:
+      label: Caliper version
+      description: From **About Caliper** in the status item menu -- the version and the build number in brackets.
+      placeholder: 0.1.0 (123)
+    validations:
+      required: true
+  - type: input
+    id: mac
+    attributes:
+      label: Mac and macOS
+      description: From  > About This Mac.
+      placeholder: MacBook Air, M4, macOS 26.1
+    validations:
+      required: true
+  - type: textarea
+    id: widget
+    attributes:
+      label: The widget, if it is about one
+      description: Right-click the widget in the editor's list, choose **Copy as JSON**, and paste it here. It holds your cells and nothing about your Mac.
+      render: json
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Screenshots, what changed recently, whether it started after a macOS update.

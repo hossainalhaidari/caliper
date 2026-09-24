@@ -1,0 +1,46 @@
+name: Missing or wrong sensor
+description: A temperature, fan, power or GPU reading is missing, stuck, or plainly wrong on your Mac.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Temperatures, fans, power and the GPU are read through interfaces Apple does not document, and a macOS update can move them. Caliper sends no telemetry, so a report like this is how anyone finds out -- thank you.
+  - type: input
+    id: mac
+    attributes:
+      label: Mac and chip
+      description: From  > About This Mac. The exact model matters; sensors differ between chips and between laptops and desktops.
+      placeholder: MacBook Pro 14-inch, M4 Pro
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      description: With the build number, from  > About This Mac > More Info, if you can.
+      placeholder: macOS 26.1 (25B78)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Caliper version
+      description: From **About Caliper** in the status item menu.
+      placeholder: 0.1.0 (123)
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: Which reading, and what is wrong with it
+      description: Missing from the metric picker, always a dash, stuck on one value, or a number that cannot be right. If it worked before a macOS update, say which.
+    validations:
+      required: true
+  - type: textarea
+    id: sensors
+    attributes:
+      label: What Caliper can see
+      description: |
+        If you can build from source, run `make sensors` in a clone of the repository and paste the output. It lists every metric this Mac offers and where each is read from, and says more than any description.
+      render: text
