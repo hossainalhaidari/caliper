@@ -103,15 +103,9 @@ final class StandInWindow {
     var window: NSWindow? { isShowing ? nil : hidden }
 
     /// Shows or hides it, and has `watcher` look.
-    ///
-    /// The answer comes from `isShowing`, not from AppKit: a window that was
-    /// never ordered in reads as hidden on a Mac with a display, but a CI
-    /// runner reports it visible for a while. What is under test is the
-    /// watcher's decision and what it switches off, not the window server.
     func set(showing: Bool, for watcher: OcclusionWatcher) {
         isShowing = showing
         watcher.window = { [unowned self] in self.window }
-        watcher.isOnScreen = { [unowned self] _ in self.isShowing }
         watcher.evaluate()
     }
 }
@@ -121,12 +115,25 @@ final class StandInWindow {
 /// that fires in a `Task`. Polling with a deadline rather than sleeping a fixed
 /// time: a loaded CI runner is slow, and a fixed sleep is either flaky or slow
 /// everywhere.
+///
+/// A deadline that has passed is not yet a failure. The main actor can be
+/// held for seconds -- on a CI runner the first status item waits that long
+/// for a window server -- and when it is let go, this loop and the work it is
+/// waiting for are both ready at once, with the deadline long gone. So the
+/// work gets a few more turns before the answer is final. That cost five
+/// tests that had nothing wrong with them.
 @MainActor
 func eventually(within timeout: Duration = .seconds(3), _ condition: () -> Bool) async -> Bool {
     let clock = ContinuousClock()
     let deadline = clock.now + timeout
     while !condition() {
-        guard clock.now < deadline else { return false }
+        guard clock.now < deadline else {
+            for _ in 0..<10 {
+                try? await Task.sleep(for: .milliseconds(20))
+                if condition() { return true }
+            }
+            return false
+        }
         try? await Task.sleep(for: .milliseconds(10))
     }
     return true
